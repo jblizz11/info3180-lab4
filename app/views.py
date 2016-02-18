@@ -56,15 +56,23 @@ def fileiterate():
         for file in files:
             filepath = os.path.join(subdir, file)
     return files 
-    
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+def allowed_file(filename):
+        return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS   
+           
 @app.route ('/filelisting')
 def listing():
     normalfile =[]
     photofile =[]
     allfiles =fileiterate()
+   
+   
     for file in allfiles:
-        if file.endswith ('.jpg') or file.endswith('.jpeg'):
-            photofile += ['static/uploads/'+file]
+        
+        if  allowed_file(file):
+            photofile += ['static/uploads/'+ file]
         else:
             normalfile+=[file]
     return render_template("filelisting.html",files=normalfile, photos=photofile)
